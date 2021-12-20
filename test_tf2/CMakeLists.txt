@@ -99,7 +99,10 @@ if(TARGET test_buffer_client)
     tf2_ros
   )
   target_link_libraries(test_buffer_client ${GTEST_LIBRARIES})
-  add_launch_test(test/buffer_client_tester.launch.py)
+  add_launch_test(test/buffer_client_tester.launch.py
+    TARGET buffer_client_tester_component_test
+  )
+  set_tests_properties(buffer_client_tester_component_test PROPERTIES LABELS "component_test")
 endif()
 
 add_executable(test_static_publisher test/test_static_publisher.cpp)
@@ -112,7 +115,10 @@ if(TARGET test_static_publisher)
   )
   target_include_directories(test_static_publisher PRIVATE ${GTEST_INCLUDE_DIRS})
   target_link_libraries(test_static_publisher ${GTEST_LIBRARIES})
-  add_launch_test(test/static_publisher.launch.py)
+  add_launch_test(test/static_publisher.launch.py
+    TARGET static_publisher_component_test
+  )
+  set_tests_properties(static_publisher_component_test PROPERTIES LABELS "component_test")
 endif()
 
 ament_add_gtest(test_tf2_bullet test/test_tf2_bullet.cpp)
@@ -124,8 +130,11 @@ if(TARGET test_tf2_bullet)
   )
 endif()
 
-# TODO(ahcorde): enable once python part of tf2_geometry_msgs is working
-# add_launch_test(test/test_buffer_client.launch.py)
+add_launch_test(test/test_buffer_client.launch.py
+TARGET test_buffer_client_component_test
+)
+set_tests_properties(test_buffer_client_component_test PROPERTIES LABELS "component_test")
+add_rostest(${CMAKE_CURRENT_SOURCE_DIR}/test/test_tf2_bullet.launch)
 
 # install executables
 install(TARGETS
